@@ -1,0 +1,6 @@
+@minceraftapi_HostAddress = http://localhost:5237
+
+GET {{minceraftapi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
