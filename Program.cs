@@ -24,11 +24,32 @@ app.Use(async (context, next) =>
     if (context.Request.Path.StartsWithSegments("/swagger"))
     {
         var supplied = context.Request.Query["senha"].ToString() ?? "";
+        var cookie = context.Request.Cookies["SwaggerAuth"];
 
-        if (secret != supplied)
+        // If the correct password was supplied, set a cookie so subsequent
+        // requests for swagger assets (JS/CSS) are allowed without the query param.
+        if (!string.IsNullOrEmpty(secret) && supplied == secret)
         {
-            context.Response.ContentType = "text/html; charset=utf-8";
-            await context.Response.WriteAsync(@"
+            context.Response.Cookies.Append("SwaggerAuth", "1", new Microsoft.AspNetCore.Http.CookieOptions
+            {
+                HttpOnly = true,
+                Path = "/",
+                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax
+            });
+            await next();
+            return;
+        }
+
+        // Allow if cookie is present
+        if (cookie == "1")
+        {
+            await next();
+            return;
+        }
+
+        // Otherwise render the password prompt (HTML)
+        context.Response.ContentType = "text/html; charset=utf-8";
+        await context.Response.WriteAsync(@"
                 <html>
                     <body style='font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh'>
                         <form method='get'>
@@ -38,8 +59,7 @@ app.Use(async (context, next) =>
                         </form>
                     </body>
                 </html>");
-            return;
-        }
+        return;
     }
     await next();
 });
