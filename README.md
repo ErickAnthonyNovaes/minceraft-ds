@@ -31,6 +31,22 @@ After setting the environment variable:
 - You'll need to provide the password set in `SwaggerSecret` when prompted
 - If `SwaggerSecret` is not set, Swagger will be inaccessible (empty password won't work)
 
+Accessing Swagger with Basic Auth
+--------------------------------
+The app uses HTTP Basic authentication for the `/swagger` UI when `SwaggerSecret` is set.
+
+In the browser:
+- When you open `https://your-app.onrender.com/swagger` the browser will prompt for credentials.
+- Use any username (for example `swagger`) and use the `SwaggerSecret` value as the password.
+
+Using curl:
+
+```powershell
+curl -u swagger:YOUR_SECRET https://your-app.onrender.com/swagger/v1/swagger.json
+```
+
+This will return the raw OpenAPI JSON if the credentials are correct.
+
 Local testing with Docker
 ```powershell
 docker build -t minceraftapi:local .

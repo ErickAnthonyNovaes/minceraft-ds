@@ -18,55 +18,48 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Middlewares
-// Password protection for Swagger
+// Basic auth protection for Swagger
 app.Use(async (context, next) =>
 {
     if (context.Request.Path.StartsWithSegments("/swagger"))
     {
-        var supplied = context.Request.Query["senha"].ToString() ?? "";
-        var cookie = context.Request.Cookies["SwaggerAuth"];
-
-        // If the correct password was supplied, set a cookie so subsequent
-        // requests for swagger assets (JS/CSS) are allowed without the query param.
-        if (!string.IsNullOrEmpty(secret) && supplied == secret)
-        {
-            // Set a secure cookie (SameSite=None required for some cross-site scenarios)
-            context.Response.Cookies.Append("SwaggerAuth", "1", new Microsoft.AspNetCore.Http.CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                Path = "/",
-                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
-            });
-
-            // Redirect to the same path without query string so the browser will
-            // request assets with the cookie included (avoids returning the HTML login for JS files).
-            var redirectPath = context.Request.Path.HasValue ? context.Request.Path.Value : "/swagger";
-            context.Response.Redirect(redirectPath);
-            return;
-        }
-
-        // Allow if cookie is present
-        if (cookie == "1")
+        // If no secret is configured, allow access
+        if (string.IsNullOrEmpty(secret))
         {
             await next();
             return;
         }
 
-        // Otherwise render the password prompt (HTML)
-        context.Response.ContentType = "text/html; charset=utf-8";
-        await context.Response.WriteAsync(@"
-                <html>
-                    <body style='font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh'>
-                        <form method='get'>
-                            <h3>Senha requerida</h3>
-                            <input name='senha' type='password' autocomplete='off' style='padding:8px;margin:8px' />
-                            <button style='padding:8px'>Entrar</button>
-                        </form>
-                    </body>
-                </html>");
+        var auth = context.Request.Headers["Authorization"].ToString();
+        if (!string.IsNullOrEmpty(auth) && auth.StartsWith("Basic "))
+        {
+            try
+            {
+                var encoded = auth.Substring("Basic ".Length).Trim();
+                var bytes = System.Convert.FromBase64String(encoded);
+                var decoded = System.Text.Encoding.UTF8.GetString(bytes);
+                // Expecting `username:password` where username can be anything (e.g. "swagger")
+                var idx = decoded.IndexOf(':');
+                if (idx >= 0)
+                {
+                    var password = decoded.Substring(idx + 1);
+                    if (password == secret)
+                    {
+                        await next();
+                        return;
+                    }
+                }
+            }
+            catch { /* ignore malformed header */ }
+        }
+
+        // Request Basic credentials
+        context.Response.Headers["WWW-Authenticate"] = "Basic realm=\"Swagger\"";
+        context.Response.StatusCode = 401;
+        await context.Response.WriteAsync("Unauthorized");
         return;
     }
+
     await next();
 });
 
