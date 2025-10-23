@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <title>Minceraft</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        iframe {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        #bloqueio {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ebeaea url("/images/blok.png") center/contain no-repeat;
+            display: none;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div id="bloqueio"></div>
+    <iframe id="frame" style="display:none;"></iframe>
+
+    <script>
+        const bloqueio = document.getElementById('bloqueio');
+        const frame = document.getElementById('frame');
+
+        let estavaBloqueado = false;
+
+        function atualizarTela(bloqueado) {
+            if (bloqueado) {
+                bloqueio.style.display = 'block';
+                frame.style.display = 'none';
+                estavaBloqueado = true;
+            } else {
+                bloqueio.style.display = 'none';
+                frame.style.display = 'block';
+                frame.src = '/conteudo';
+                if (estavaBloqueado) {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
+                estavaBloqueado = false;
+            }
+        }
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/hub/bloqueio")
+            .build();
+
+        connection.on("EstadoAlterado", atualizarTela);
+        connection.start().catch(console.error);
+
+        fetch('/Bloqueio/Estado')
+            .then(res => res.json())
+            .then(data => atualizarTela(data.bloqueado));
+    </script>
+</body>
+</html>

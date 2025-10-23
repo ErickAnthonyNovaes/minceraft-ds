@@ -1,0 +1,14 @@
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\minceraftapi.exe
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\appsettings.Development.json
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\appsettings.json
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\minceraftapi.dll
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\minceraftapi.deps.json
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\minceraftapi.runtimeconfig.json
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\minceraftapi.pdb
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\Microsoft.AspNetCore.OpenApi.dll
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\Microsoft.OpenApi.dll
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\Newtonsoft.Json.dll
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\Swashbuckle.AspNetCore.Swagger.dll
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Nova pasta\minceraftapi\bin\Release\net9.0\publish\System.Net.WebSockets.WebSocketProtocol.dll

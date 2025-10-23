@@ -55,10 +55,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 app.UseCors();
+app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<BloqueioHub>("/hub/bloqueio");
+// Serve index.html for unmatched routes (SPA fallback)
+app.MapFallbackToFile("index.html");
+
+// Health endpoint for readiness/liveness checks
+app.MapGet("/health", () => Results.Json(new { status = "ok" }));
 
 app.Run();

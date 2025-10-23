@@ -1,0 +1,16 @@
+bin/
+obj/
+.vs/
+.git
+**/bin/
+**/obj/
+*.user
+*.suo
+*.log
+node_modules/
+*.db
+**/*.local.settings.json
+secrets.json
+*.pfx
+.DS_Store
+*.db

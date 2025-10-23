@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Nova pasta\\minceraftapi\\minceraftapi.csproj": {}
+    "c:\\Nova pasta\\minceraftapi\\minceraftapi.csproj": {}
   },
   "projects": {
-    "C:\\Nova pasta\\minceraftapi\\minceraftapi.csproj": {
+    "c:\\Nova pasta\\minceraftapi\\minceraftapi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Nova pasta\\minceraftapi\\minceraftapi.csproj",
+        "projectUniqueName": "c:\\Nova pasta\\minceraftapi\\minceraftapi.csproj",
         "projectName": "minceraftapi",
-        "projectPath": "C:\\Nova pasta\\minceraftapi\\minceraftapi.csproj",
+        "projectPath": "c:\\Nova pasta\\minceraftapi\\minceraftapi.csproj",
         "packagesPath": "C:\\Users\\Erick Anthony Novaes\\.nuget\\packages\\",
-        "outputPath": "C:\\Nova pasta\\minceraftapi\\obj\\",
+        "outputPath": "c:\\Nova pasta\\minceraftapi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Erick Anthony Novaes\\AppData\\Roaming\\NuGet\\NuGet.Config"
