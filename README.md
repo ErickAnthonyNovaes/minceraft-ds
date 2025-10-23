@@ -18,7 +18,18 @@ Deploying on Render (Docker)
 Notes and tips
 - If you prefer explicit dynamic port binding, the Dockerfile already respects `$PORT` with a fallback to 80.
 - TLS is terminated by Render; your app should listen on HTTP inside the container.
-- If you need to customize environment variables (for example a `SwaggerSecret`), set them in Render's environment settings.
+
+Required Environment Variables (Render)
+1. Open your service in Render Dashboard
+2. Go to "Environment" tab
+3. Add the following environment variable:
+   - Key: `SwaggerSecret`
+   - Value: Your chosen password for Swagger access
+
+After setting the environment variable:
+- Access Swagger UI at: `https://your-app.onrender.com/swagger`
+- You'll need to provide the password set in `SwaggerSecret` when prompted
+- If `SwaggerSecret` is not set, Swagger will be inaccessible (empty password won't work)
 
 Local testing with Docker
 ```powershell

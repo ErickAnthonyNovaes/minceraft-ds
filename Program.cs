@@ -18,40 +18,38 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Middlewares
-if (app.Environment.IsDevelopment())
+// Password protection for Swagger
+app.Use(async (context, next) =>
 {
-    app.Use(async (context, next) =>
+    if (context.Request.Path.StartsWithSegments("/swagger"))
     {
-        if (context.Request.Path.StartsWithSegments("/swagger"))
+        var supplied = context.Request.Query["senha"].ToString() ?? "";
+
+        if (secret != supplied)
         {
-            var supplied = context.Request.Query["senha"].ToString() ?? "";
-
-            if (secret != supplied)
-            {
-                context.Response.ContentType = "text/html; charset=utf-8";
-                await context.Response.WriteAsync(@"
-                    <html>
-                        <body style='font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh'>
-                            <form method='get'>
-                                <h3>Senha requerida</h3>
-                                <input name='senha' type='password' autocomplete='off' style='padding:8px;margin:8px' />
-                                <button style='padding:8px'>Entrar</button>
-                            </form>
-                        </body>
-                    </html>");
-                return;
-            }
+            context.Response.ContentType = "text/html; charset=utf-8";
+            await context.Response.WriteAsync(@"
+                <html>
+                    <body style='font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh'>
+                        <form method='get'>
+                            <h3>Senha requerida</h3>
+                            <input name='senha' type='password' autocomplete='off' style='padding:8px;margin:8px' />
+                            <button style='padding:8px'>Entrar</button>
+                        </form>
+                    </body>
+                </html>");
+            return;
         }
-        await next();
-    });
+    }
+    await next();
+});
 
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
-        c.RoutePrefix = "swagger";
-    });
-}
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+    c.RoutePrefix = "swagger";
+});
 
 app.UseRouting();
 app.UseCors();
