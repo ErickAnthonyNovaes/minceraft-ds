@@ -37,4 +37,4 @@ C:\Nova pasta\minceraftapi\obj\Debug\net9.0\compressed\7v0p7drp0d-xjxvqjfpaw.gz
 C:\Nova pasta\minceraftapi\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Nova pasta\minceraftapi\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Nova pasta\minceraftapi\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-C:\Nova pasta\minceraftapi\obj\Debug\net9.0\compressed\o8kiwo6fs5-qx06g443bm.gz
+C:\Nova pasta\minceraftapi\obj\Debug\net9.0\compressed\o8kiwo6fs5-ku8y2a2s4v.gz

@@ -30,13 +30,19 @@ app.Use(async (context, next) =>
         // requests for swagger assets (JS/CSS) are allowed without the query param.
         if (!string.IsNullOrEmpty(secret) && supplied == secret)
         {
+            // Set a secure cookie (SameSite=None required for some cross-site scenarios)
             context.Response.Cookies.Append("SwaggerAuth", "1", new Microsoft.AspNetCore.Http.CookieOptions
             {
                 HttpOnly = true,
+                Secure = true,
                 Path = "/",
-                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax
+                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
             });
-            await next();
+
+            // Redirect to the same path without query string so the browser will
+            // request assets with the cookie included (avoids returning the HTML login for JS files).
+            var redirectPath = context.Request.Path.HasValue ? context.Request.Path.Value : "/swagger";
+            context.Response.Redirect(redirectPath);
             return;
         }
 
