@@ -5,17 +5,37 @@ using Microsoft.Extensions.Hosting;
 var builder = WebApplication.CreateBuilder(args);
 var secret = builder.Configuration["SwaggerSecret"] ?? "";
 
+// Logging middleware para depuração
+builder.Logging.AddConsole();
+
 // Serviços
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<BloqueioService>();
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyHeader()
+              .AllowAnyMethod()
+              .SetIsOriginAllowed(_ => true)
+              .AllowCredentials();
+    });
+});
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Logging middleware para depuração
+app.Use(async (context, next) =>
+{
+    var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("RequestLogger");
+    logger.LogInformation($"Request: {context.Request.Method} {context.Request.Path}");
+    await next();
+});
 
 // Middlewares
 // Basic auth protection for Swagger
